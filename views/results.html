@@ -1,0 +1,20 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+  </head>
+
+  <body>
+    <h1>Survey Results</h1>
+    <div id="results"></div>
+    <button onclick="window.location.href='/'">Go Back to Survey</button>
+  </body>
+  <script>
+    // Fetch and display survey results
+    fetch('/getData')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('results').innerHTML = data;
+      })
+      .catch(error => console.error('Error fetching survey results:', error));
+  </script>
+</html>
