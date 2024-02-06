@@ -5,7 +5,7 @@ const path = require('path');
 
 const app = express();
 const sessions = {};
-const sessionDuration = 60 * 60 * 1000; // 1 hour
+const sessionDuration = 60 * 60 * 1000; // Session duration is 1 hour
 
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
@@ -15,6 +15,8 @@ app.use(express.static(path.join(__dirname, 'views')));
 app.get('/', (req, res) => {
   const sessionId = req.cookies.sessionId || crypto.randomBytes(16).toString('hex');
   res.cookie('sessionId', sessionId, { httpOnly: true, path: '/' });
+
+  console.log('Session ID - ', sessionId);
 
   let sessionData = sessions[sessionId] || {};
   sessionData.lastAccessed = Date.now();
@@ -43,6 +45,7 @@ app.get('/getData', (req, res) => {
   const sessionData = sessions[sessionId] || {};
 
   if (sessionData.lastAccessed && Date.now() - sessionData.lastAccessed > sessionDuration) {
+    delete sessions[sessionId];
     res.send('Session has expired.');
   } else {
     res.send(`Session ID: ${sessionId}<br>Session Data: ${JSON.stringify(sessionData)}`);
@@ -60,5 +63,5 @@ app.get('/results', (req, res) => {
 const PORT = 3000;
 
 app.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
+  console.log(`Server is listening on http://localhost:${PORT}`);
 });

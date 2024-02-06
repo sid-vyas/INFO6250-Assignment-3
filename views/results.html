@@ -9,7 +9,6 @@
     <button onclick="window.location.href='/'">Go Back to Survey</button>
   </body>
   <script>
-    // Fetch and display survey results
     fetch('/getData')
       .then(response => response.text())
       .then(data => {
